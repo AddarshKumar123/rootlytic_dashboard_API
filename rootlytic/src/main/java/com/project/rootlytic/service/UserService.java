@@ -42,10 +42,10 @@ public class UserService {
 
         ResponseCookie jwtCookie=ResponseCookie.from("root_lytic",token)
                 .httpOnly(true)
-                .secure(false)
+                .secure(true)
                 .path("/")
                 .maxAge(24*60*60)
-                .sameSite("Lax")
+                .sameSite("None")
                 .build();
         return ResponseEntity.ok().header(HttpHeaders.SET_COOKIE,jwtCookie.toString()).body("Logged in Successfully");
     }
@@ -59,10 +59,10 @@ public class UserService {
 
         ResponseCookie jwtCookie=ResponseCookie.from("root_lytic",token)
                 .httpOnly(true)
-                .secure(false)
+                .secure(true)
                 .path("/")
                 .maxAge(24*60*60)
-                .sameSite("Lax")
+                .sameSite("None")
                 .build();
         return ResponseEntity.ok().header(HttpHeaders.SET_COOKIE,jwtCookie.toString()).body("Logged in Successfully");
     }
