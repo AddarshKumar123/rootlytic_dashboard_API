@@ -6,7 +6,7 @@ spring:
       uri: ${MONGO_URI}
 
 server:
-  port: 5050
+  port: ${PORT:5050}
 
 gemini:
   api:

@@ -34,7 +34,7 @@ public class JwtAuthFilter extends OncePerRequestFilter {
 
         if(request.getCookies() != null){
             for(Cookie cookie:request.getCookies()){
-                if("jwt".equals(cookie.getName())){
+                if("root_lytic".equals(cookie.getName())){
                     token = cookie.getValue();
                     break;
                 }

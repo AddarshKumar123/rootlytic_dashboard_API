@@ -38,8 +38,16 @@ public class UserService {
         userModel.setPassword(passwordEncoder.encode(password));
         userRepository.save(userModel);
 
-        String token = jwtUtility.generateToken(email);
-        return new ResponseEntity<>(token, HttpStatus.OK);
+        String token=jwtUtility.generateToken(email);
+
+        ResponseCookie jwtCookie=ResponseCookie.from("root_lytic",token)
+                .httpOnly(true)
+                .secure(false)
+                .path("/")
+                .maxAge(24*60*60)
+                .sameSite("Lax")
+                .build();
+        return ResponseEntity.ok().header(HttpHeaders.SET_COOKIE,jwtCookie.toString()).body("Logged in Successfully");
     }
 
     public ResponseEntity<String> login(UserModel userModel){
