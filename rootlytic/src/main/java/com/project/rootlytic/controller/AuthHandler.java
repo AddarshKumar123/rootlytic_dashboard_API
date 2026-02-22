@@ -9,7 +9,6 @@ import org.springframework.web.bind.annotation.RestController;
 public class AuthHandler {
     @GetMapping("/auth")
     public ResponseEntity<String> validateToken(){
-        System.out.print("validated");
         return new ResponseEntity<>(HttpStatus.OK);
     }
 }
