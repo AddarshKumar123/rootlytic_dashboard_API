@@ -39,6 +39,10 @@ public class AIFixService {
         LogDTO logEntity = logRepository.findById(Id)
                 .orElseThrow(() -> new RuntimeException("Log not found"));
 
+        if(logEntity.getAiFix()!=null){
+            return logEntity.getAiFix();
+        }
+
         String error = logEntity.toString();
         String finalPrompt = prompt + " " + error;
 
