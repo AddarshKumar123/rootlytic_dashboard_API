@@ -19,6 +19,7 @@ import java.util.List;
 public class ApplicationModel {
     @Id
     private String id;
+    private String userId;
     private String api_key;
     private String applicationName;
     private String type;
