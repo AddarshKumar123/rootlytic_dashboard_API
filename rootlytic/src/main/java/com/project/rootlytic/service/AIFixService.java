@@ -4,6 +4,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.project.rootlytic.DTO.LogDTO;
+import com.project.rootlytic.model.ApplicationModel;
 import com.project.rootlytic.repository.LogRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -24,6 +25,9 @@ public class AIFixService {
     @Autowired
     LogRepository logRepository;
 
+    @Autowired
+    ApplicationModel applicationModel;
+
     private final RestClient restClient = RestClient.create();
     private final ObjectMapper objectMapper = new ObjectMapper();
 
@@ -43,7 +47,11 @@ public class AIFixService {
             aiFix.put("codeFix",logEntity.getAICodeFix());
         }
 
-         String sourceCodeContext = gitHubContextService.fetchFileByName(logEntity.getFileName(), "AddarshKumar123", "test", "main");
+        String gitHubUser= applicationModel.getGithubUsername();
+        String repo= applicationModel.getRepoName();
+        String branch=applicationModel.getBranch();
+
+         String sourceCodeContext = gitHubContextService.fetchFileByName(logEntity.getFileName(), gitHubUser, repo, branch);
 
 
         String prompt = String.format("""
