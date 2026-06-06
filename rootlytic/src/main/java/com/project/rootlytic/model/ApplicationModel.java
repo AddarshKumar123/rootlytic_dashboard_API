@@ -18,7 +18,7 @@ import java.util.List;
 @Document(collection = "applications")
 public class ApplicationModel {
     @Id
-    private String id;
+    private String applicationId;
     private String userId;
     private String api_key;
     private String applicationName;

@@ -16,7 +16,7 @@ public class AIFixController {
     private AIFixService aiFixService;
 
     @PostMapping("/ai-fix/{id}")
-    public Map<String,String> getAiFix(@PathVariable String id) throws JsonProcessingException {
-        return aiFixService.getAiFix(id);
+    public Map<String,String> getAiFix(@PathVariable String id,@RequestBody String appId) throws JsonProcessingException {
+        return aiFixService.getAiFix(id,appId);
     }
 }

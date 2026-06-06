@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.project.rootlytic.DTO.LogDTO;
 import com.project.rootlytic.model.ApplicationModel;
+import com.project.rootlytic.repository.ApplicationRepository;
 import com.project.rootlytic.repository.LogRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -26,7 +27,7 @@ public class AIFixService {
     LogRepository logRepository;
 
     @Autowired
-    ApplicationModel applicationModel;
+    ApplicationRepository applicationRepository;
 
     private final RestClient restClient = RestClient.create();
     private final ObjectMapper objectMapper = new ObjectMapper();
@@ -37,7 +38,7 @@ public class AIFixService {
     @Value("${gemini.api.key}")
     private String geminiApiKey;
 
-    public Map<String,String> getAiFix(String id) throws JsonProcessingException {
+    public Map<String,String> getAiFix(String id,String appId) throws JsonProcessingException {
         LogDTO logEntity = logRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Log not found"));
 
@@ -47,6 +48,7 @@ public class AIFixService {
             aiFix.put("codeFix",logEntity.getAICodeFix());
         }
 
+        ApplicationModel applicationModel=applicationRepository.findByApplicationId(appId);
         String gitHubUser= applicationModel.getGithubUsername();
         String repo= applicationModel.getRepoName();
         String branch=applicationModel.getBranch();
