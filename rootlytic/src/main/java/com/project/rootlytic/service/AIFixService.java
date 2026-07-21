@@ -42,10 +42,11 @@ public class AIFixService {
         LogDTO logEntity = logRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Log not found"));
 
-        if (logEntity.getAICodeFix() != null) {
+        if (logEntity.getAiCodeFix() != null) {
             Map<String,String> aiFix=new HashMap<>();
             aiFix.put("rca",logEntity.getAiRca());
-            aiFix.put("codeFix",logEntity.getAICodeFix());
+            aiFix.put("codeFix",logEntity.getAiCodeFix());
+            return aiFix;
         }
 
         ApplicationModel applicationModel=applicationRepository.findByApplicationId(appId);
@@ -105,14 +106,13 @@ public class AIFixService {
         JsonNode customAiResponse = objectMapper.readTree(aiRawOutput);
         String rca = customAiResponse.path("rca").asText();
         String codeFix = customAiResponse.path("codeFix").asText();
-
         logEntity.setAiRca(rca);
-        logEntity.setAICodeFix(codeFix);
+        logEntity.setAiCodeFix(codeFix);
         logRepository.save(logEntity);
 
         Map<String,String> aiFix=new HashMap<>();
         aiFix.put("rca",logEntity.getAiRca());
-        aiFix.put("codeFix",logEntity.getAICodeFix());
+        aiFix.put("codeFix",logEntity.getAiCodeFix());
 
         return aiFix;
     }
