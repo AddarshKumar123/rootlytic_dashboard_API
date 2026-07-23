@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.HttpServerErrorException;
 import org.springframework.web.client.RestClient;
 
 import java.util.HashMap;
@@ -92,12 +93,32 @@ public class AIFixService {
                 }
         );
 
-        ResponseEntity<String> response = restClient.post()
-                .uri(geminiApiUrl + geminiApiKey)
-                .contentType(MediaType.APPLICATION_JSON)
-                .body(body)
-                .retrieve()
-                .toEntity(String.class);
+        ResponseEntity<String> response = null;
+        int maxRetries = 3;
+        int retryCount = 0;
+        
+        while (retryCount < maxRetries) {
+            try {
+                response = restClient.post()
+                        .uri(geminiApiUrl + geminiApiKey)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .body(body)
+                        .retrieve()
+                        .toEntity(String.class);
+                break;
+            } catch (HttpServerErrorException.ServiceUnavailable e) {
+                retryCount++;
+                if (retryCount >= maxRetries) {
+                    throw new RuntimeException("Gemini API is currently unavailable. Please try again later.");
+                }
+                try {
+                    Thread.sleep(2000L * retryCount);
+                } catch (InterruptedException ie) {
+                    Thread.currentThread().interrupt();
+                    throw new RuntimeException("Request interrupted", ie);
+                }
+            }
+        }
 
         String jsonResponse = response.getBody();
         JsonNode root = objectMapper.readTree(jsonResponse);
